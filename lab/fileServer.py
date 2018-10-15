@@ -2,8 +2,8 @@
 
 import socket, sys, re, os
 from threading import Thread
+import threading
 import time
-sys.path.append("../lib")
 import params
 
 current_dir = os.getcwd() + '/server/'
@@ -13,6 +13,7 @@ if not os.path.exists(current_dir):
 switchesVarDefaults = (
         (('-l', '--listenPort') ,'listenPort', 50001),
         (('-?', '--usage'), "usage", False), # boolean (set if present)
+        (('-d', '--debug'), "debug", False), # boolean (set if present)
     )
 
 paramMap = params.parseParams(switchesVarDefaults)
@@ -75,8 +76,8 @@ class ServerThread(Thread):
                                 output_file.write(data)
                             self.conn.send(data.encode())
             except:
-                print('Something went wrong! Connection with client has been lost.')
-                self.conn.send("EOF".encode())
+                #print('Something went wrong! Connection with client has been lost.')
+                #self.conn.send("EOF".encode())
                 self.conn.close()
                 sys.exit(1)
                 break
