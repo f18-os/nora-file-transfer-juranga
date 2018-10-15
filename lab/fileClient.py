@@ -2,7 +2,7 @@
 
 # Echo client program
 import socket, sys, re, os
-sys.path.append("../lib")       # for params
+import threading
 from threading import Thread
 import params
 
@@ -10,11 +10,12 @@ import params
 switchesVarDefaults = (
     (('-s', '--server'), 'server', "127.0.0.1:50001"),
     (('-?', '--usage'), "usage", False), # boolean (set if present)
-    )
+    (('-d', '--debug'), "debug", False), # boolean (set if present)
+)
 
 progname = "fileClient"
 paramMap = params.parseParams(switchesVarDefaults)
-server, usage  = paramMap["server"], paramMap["usage"]
+server, usage, debug = paramMap["server"], paramMap["usage"], paramMap["debug"]
 
 if usage:
     params.usage()
@@ -57,10 +58,10 @@ class ClientThread(Thread):
             print('could not open socket')
             sys.exit(1)
 
-        file = ""
+        file = "tst.txt"
         # Check for File
-        while not os.path.exists(file):
-            file = input("Enter the name of the file you wish to send:")
+        #while not os.path.exists(file):
+        #    file = input("Enter the name of the file you wish to send:")
 
         header = "PUT {}".format(file).encode()
         s.send(header)
@@ -96,3 +97,5 @@ class ClientThread(Thread):
             #s.close()
             sys.exit(1)
         s.close()
+for i in range(100):
+    ClientThread(serverHost, serverPort, debug)
